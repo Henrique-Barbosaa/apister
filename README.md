@@ -17,3 +17,24 @@ Cumprindo com esses dois requisitos, basta executar o seguinte comando na raíz 
 ```cmd
 mvn javafx:run
 ```
+
+# Executar OpenJML
+
+**Antes de tudo, deve renomear o arquivo *module-info.java* para que ele não esteja incluso na compilação do OpenJML. \
+Pode renomear para *module-info.java.bak*, por exemplo.**
+
+Comando para crair o arquivo classpath.txt, que possui o caminho para as dependências do JavaFX. \
+
+```cmd
+mvn dependency:build-classpath -Dmdep.outputFile=classpath.txt
+```
+
+Comando para executar o OpenJML num arquivo, por exemplo, Node.java.
+
+```cmd
+openjml -esc -sourcepath src/main/java -classpath $(cat classpath.txt) -progress src/main/java/app/core/Node.java
+```
+
+A flag *-progress* serve para acompanhar quais funções e classes estão a ser analisadas no momento.
+
+**Ambos os comandos devem ser executados no diretório raiz do projeto.**
