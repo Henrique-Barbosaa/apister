@@ -3,6 +3,7 @@ package app.core;
 import java.util.HashMap;
 import java.util.Map;
 
+//@ nullable_by_default
 public enum StatusCode {
     //#region Values
     CONTINUE(100),
@@ -69,25 +70,37 @@ public enum StatusCode {
     NETWORK_AUTHENTICATION_REQUIRED(511);
     //#endregion
     
-    private final int value;
+    private /*@ spec_public @*/ final int value;
     private static Map<Integer, StatusCode> map = new HashMap<Integer, StatusCode>();
 
+    //@ skipesc
     static {
         for(StatusCode status : StatusCode.values()) {
             StatusCode.map.put(status.value, status);
         };
     };
 
+    /*@ private normal_behavior
+      @   ensures this.value == value;
+      @*/
     private StatusCode(int value) {
         this.value = value;
     };
 
+    /*@ public normal_behavior
+      @   ensures \result != null;
+      @*/
+    //@ skipesc
     public static StatusCode fromCode(int value) {
         StatusCode status = StatusCode.map.get(value);
         if(status == null) status = StatusCode.BAD_REQUEST;
         return status;
     };
 
+    /*@ public normal_behavior
+      @   ensures \result == this.value;
+      @   pure
+      @*/
     public int getValue() {
         return this.value;
     };

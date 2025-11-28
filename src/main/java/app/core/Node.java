@@ -35,6 +35,7 @@ public class Node extends TreeItem<String> implements Externalizable {
 
     //@ skipesc
     @Override
+    @SuppressWarnings("unchecked")
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         this.setValue(in.readUTF());
         int size = in.readInt();
