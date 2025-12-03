@@ -11,18 +11,39 @@ import javafx.beans.property.StringProperty;
 
 //@ nullable_by_default
 public class Response implements Externalizable {
-    private /*@ spec_public @*/ StringProperty message;
-    private /*@ spec_public @*/ StringProperty header;
+    private /*@ spec_public non_null @*/ final StringProperty message;
+    private /*@ spec_public non_null @*/ final StringProperty header;
     private /*@ spec_public @*/ String url;
     private /*@ spec_public @*/ StatusCode statusCode;
     private /*@ spec_public @*/ Instant requestedAt;
     private /*@ spec_public @*/ Instant receivedAt;
     
+    /*@ public normal_behavior
+      @   ensures this.message != null;
+      @   ensures this.header != null;
+      @*/
+    //@ skipesc
     public Response() {
         this.message = new SimpleStringProperty("");
         this.header = new SimpleStringProperty("");
     };
 
+    /*@ public normal_behavior
+      @   requires requestedAt != null;
+      @   requires url != null;
+      @   requires message != null;
+      @   requires header != null;
+      @   requires statusCode != null;
+      @   ensures this.requestedAt == requestedAt;
+      @   ensures this.url == url;
+      @   ensures this.statusCode == statusCode;
+      @   ensures this.statusCode != null;
+      @   ensures this.url != null;
+      @   ensures this.header != null;
+      @   ensures this.message != null;
+      @   ensures this.requestedAt != null;
+      @   ensures this.receivedAt != null;
+      @*/
     //@ skipesc
     public Response(
         Instant requestedAt,

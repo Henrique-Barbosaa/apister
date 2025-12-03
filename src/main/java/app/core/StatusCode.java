@@ -71,6 +71,8 @@ public enum StatusCode {
     //#endregion
     
     private /*@ spec_public @*/ final int value;
+    //@ public invariant value >= 100;
+
     private static Map<Integer, StatusCode> map = new HashMap<Integer, StatusCode>();
 
     //@ skipesc
@@ -81,6 +83,7 @@ public enum StatusCode {
     };
 
     /*@ private normal_behavior
+      @   requires value >= 100;
       @   ensures this.value == value;
       @*/
     private StatusCode(int value) {
@@ -94,6 +97,7 @@ public enum StatusCode {
     public static StatusCode fromCode(int value) {
         StatusCode status = StatusCode.map.get(value);
         if(status == null) status = StatusCode.BAD_REQUEST;
+        //@ assert status != null;
         return status;
     };
 
