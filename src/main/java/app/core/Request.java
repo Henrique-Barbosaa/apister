@@ -124,6 +124,11 @@ public class Request extends Node {
     };
     //#endregion
 
+    /*@ public normal_behavior
+      @   ensures \result != null;
+      @   ensures \result == this.lastResponse.get();
+      @   ensures \result.getStatusCode() != null;
+      @*/
     //@ skipesc
     public Response submit() throws IOException, InterruptedException {
         Instant requestedAt = Instant.now();
@@ -258,6 +263,7 @@ public class Request extends Node {
     //#region Edit
     /*@ public normal_behavior
       @   requires name != null;
+      @   ensures \result != null;
       @*/
     //@ skipesc
     public Node rename(String name) {
@@ -284,6 +290,7 @@ public class Request extends Node {
     //#endregion
     //#region Getters and setters
     /*@ public normal_behavior
+      @   ensures \result != null;
       @   pure
       @*/
     //@ skipesc
