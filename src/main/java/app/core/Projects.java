@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 import app.errors.InvalidInput;
 import app.storage.StorableList;
 
+
 public class Projects extends StorableList<String> {
     private static Pattern pattern = Pattern.compile("^[\\w\\-. ]+$", 0);
     private static Projects instance = null;

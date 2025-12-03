@@ -6,8 +6,10 @@ import java.util.Map.Entry;
 
 import app.core.StatusCode;
 
+//@ nullable_by_default
 public class RequestUtils {
     //#region Header
+    //@ skipesc
     public static String createHeader(
         StatusCode statusCode
     ) {
@@ -22,7 +24,7 @@ public class RequestUtils {
 
         return header.toString();
     };
-
+    //@ skipesc
     public static String convertHttpHeader(
         HttpHeaders headers,
         StatusCode statusCode

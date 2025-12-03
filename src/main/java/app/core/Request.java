@@ -18,13 +18,21 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+//@ nullable_by_default
 public class Request extends Node {
-    private final ObjectProperty<RequestType> type;
-    private final StringProperty url;
-    private final StringProperty body;
-    private ObservableList<HeaderEntry> header;
-    private final ObjectProperty<Response> lastResponse;
+    private /*@ spec_public non_null @*/ final ObjectProperty<RequestType> type;
+    private /*@ spec_public non_null @*/ final StringProperty url;
+    private /*@ spec_public non_null @*/ final StringProperty body;
+    private /*@ spec_public non_null @*/ ObservableList<HeaderEntry> header;
+    private /*@ spec_public non_null @*/ final ObjectProperty<Response> lastResponse;
 
+    /*@ public normal_behavior
+      @   ensures this.type != null;
+      @   ensures this.url != null;
+      @   ensures this.body != null;
+      @   ensures this.lastResponse != null;
+      @   ensures this.header != null;
+      @*/
     public Request() {
         super();
         type = new SimpleObjectProperty<RequestType>(RequestType.GET);
@@ -34,6 +42,14 @@ public class Request extends Node {
         header = FXCollections.observableArrayList();
     };
 
+    /*@ public normal_behavior
+      @   requires name != null;
+      @   ensures this.type != null;
+      @   ensures this.url != null;
+      @   ensures this.body != null;
+      @   ensures this.lastResponse != null;
+      @   ensures this.header != null;
+      @*/
     public Request(String name) {
         super(name);
         type = new SimpleObjectProperty<RequestType>(RequestType.GET);
@@ -43,6 +59,17 @@ public class Request extends Node {
         header = FXCollections.observableArrayList();
     };
 
+    /*@ public normal_behavior
+      @   requires name != null;
+      @   requires url != null;
+      @   requires body != null;
+      @   requires lastResponse != null;
+      @   ensures this.type != null;
+      @   ensures this.url != null;
+      @   ensures this.body != null;
+      @   ensures this.lastResponse != null;
+      @   ensures this.header != null;
+      @*/
     public Request(
         String name,
         String url,
@@ -58,6 +85,7 @@ public class Request extends Node {
     };
 
     //#region Externalizable
+    //@ skipesc
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeUTF(this.getValue());
@@ -76,6 +104,7 @@ public class Request extends Node {
         if(value) out.writeObject(this.lastResponse.get());
     };
 
+    //@ skipesc
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         this.setValue(in.readUTF());
@@ -95,6 +124,7 @@ public class Request extends Node {
     };
     //#endregion
 
+    //@ skipesc
     public Response submit() throws IOException, InterruptedException {
         Instant requestedAt = Instant.now();
         HttpClient client = HttpClient.newHttpClient();
@@ -226,6 +256,10 @@ public class Request extends Node {
     };
 
     //#region Edit
+    /*@ public normal_behavior
+      @   requires name != null;
+      @*/
+    //@ skipesc
     public Node rename(String name) {
         if(!(this.getParent() instanceof Node)) return this;
 
@@ -249,26 +283,50 @@ public class Request extends Node {
     };
     //#endregion
     //#region Getters and setters
+    /*@ public normal_behavior
+      @   pure
+      @*/
+    //@ skipesc
     public RequestType getType() {
         return this.type.get();
     };
 
+    /*@ public normal_behavior
+      @   ensures \result == this.type;
+      @   pure
+      @*/
     public ObjectProperty<RequestType> typeProperty() {
         return this.type;
     };
 
+    /*@ public normal_behavior
+      @   ensures \result == this.url;
+      @   pure
+      @*/
     public StringProperty urlProperty() {
         return this.url;
     };
 
+    /*@ public normal_behavior
+      @   ensures \result == this.body;
+      @   pure
+      @*/
     public StringProperty bodyProperty() {
         return this.body;
     };
 
+    /*@ public normal_behavior
+      @   ensures \result == this.header;
+      @   pure
+      @*/
     public ObservableList<HeaderEntry> headerProperty() {
         return this.header;
     };
 
+    /*@ public normal_behavior
+      @   ensures \result == this.lastResponse;
+      @   pure
+      @*/
     public ObjectProperty<Response> lastResponseProperty() {
         return this.lastResponse;
     };
