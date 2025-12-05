@@ -25,6 +25,13 @@ public class Request extends Node {
     private /*@ spec_public non_null @*/ final StringProperty body;
     private /*@ spec_public non_null @*/ ObservableList<HeaderEntry> header;
     private /*@ spec_public non_null @*/ final ObjectProperty<Response> lastResponse;
+    
+    //@ public invariant (\forall int i; 0 <= i && i < header.size(); header.get(i) != null);
+
+    //@ public constraint url == \old(url);
+    //@ public constraint body == \old(body);
+
+    //@ public initially header.size() == 0;
 
     /*@ public normal_behavior
       @   ensures this.type != null;
@@ -85,6 +92,10 @@ public class Request extends Node {
     };
 
     //#region Externalizable
+    /*@ also public exceptional_behavior
+      @   assignable \nothing; // Em caso de erro, não deveria mudar o estado (idealmente)
+      @   signals_only IOException;
+      @*/
     //@ skipesc
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
@@ -104,6 +115,9 @@ public class Request extends Node {
         if(value) out.writeObject(this.lastResponse.get());
     };
 
+    /*@ also public normal_behavior
+      @   assignable type, url, body, header, lastResponse;
+      @*/ 
     //@ skipesc
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
@@ -127,6 +141,7 @@ public class Request extends Node {
     /*@ public normal_behavior
       @   ensures \result != null;
       @   ensures \result == this.lastResponse.get();
+      @   assignable lastResponse;
       @   ensures \result.getStatusCode() != null;
       @*/
     //@ skipesc
@@ -261,8 +276,17 @@ public class Request extends Node {
     };
 
     //#region Edit
-    /*@ public normal_behavior
+    /*@ also public normal_behavior
+      @   requires !(this.getParent() instanceof Node);
+      @   assignable \nothing;
+      @   ensures \result == this;
+      @
+      @ also
+      @
+      @ public normal_behavior
+      @   requires this.getParent() instanceof Node;
       @   requires name != null;
+      @   assignable \everything;
       @   ensures \result != null;
       @*/
     //@ skipesc
