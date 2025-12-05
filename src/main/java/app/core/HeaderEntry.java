@@ -10,15 +10,30 @@ import javafx.beans.property.StringProperty;
 
 //@ nullable_by_default
 public class HeaderEntry implements Externalizable {
-    private StringProperty key;
-    private StringProperty value;  
+    private /*@ spec_public non_null @*/ final StringProperty key;
+    private /*@ spec_public non_null @*/ final StringProperty value;
 
+    //@ public constraint key == \old(key);
+    //@ public constraint value == \old(value);
+
+    /*@ public normal_behavior
+      @   assignable \everything;
+      @   ensures this.key != null;
+      @   ensures this.value != null;
+      @*/
     //@ skipesc
     public HeaderEntry() {
         this.key = new SimpleStringProperty("");
         this.value = new SimpleStringProperty("");
     };
 
+    /*@ public normal_behavior
+      @   assignable \everything;
+      @   requires key != null;
+      @   requires value != null;
+      @   ensures this.key != null;
+      @   ensures this.value != null;
+      @*/
     //@ skipesc
     public HeaderEntry(String key, String value) {
         this.key = new SimpleStringProperty(key);
@@ -26,7 +41,10 @@ public class HeaderEntry implements Externalizable {
     };
     
     //#region Externalizable
-    
+    /*@ also public exceptional_behavior
+      @   assignable \nothing;
+      @   signals_only IOException;
+      @*/
     //@ skipesc
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
@@ -34,6 +52,14 @@ public class HeaderEntry implements Externalizable {
         out.writeUTF(this.getValue());
     };
 
+    /*@ also public normal_behavior
+      @   assignable key, value;
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   signals_only IOException, ClassNotFoundException;
+      @*/
     //@ skipesc
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
@@ -43,32 +69,52 @@ public class HeaderEntry implements Externalizable {
     //#endregion
     //#region Getters and setters
 
+    /*@ public normal_behavior
+      @   pure
+      @*/
     //@ skipesc
     public String getKey() {
         return this.key.get();
     };
 
+    /*@ public normal_behavior
+      @   assignable \everything;
+      @*/
     //@ skipesc
     public void setKey(String key) {
         this.key.set(key);
     };
 
-    //@ skipesc
+    /*@ public normal_behavior
+      @   ensures \result == this.key;
+      @   ensures \result != null;
+      @   pure
+      @*/
     public StringProperty keyProperty() {
         return this.key;
     };
 
+    /*@ public normal_behavior
+      @   pure
+      @*/
     //@ skipesc
     public String getValue() {
         return this.value.get();
     };
 
+    /*@ public normal_behavior
+      @   assignable \everything;
+      @*/
     //@ skipesc
     public void setValue(String value) {
         this.value.set(value);
     };
 
-    //@ skipesc
+    /*@ public normal_behavior
+      @   ensures \result == this.value;
+      @   ensures \result != null;
+      @   pure
+      @*/
     public StringProperty valueProperty() {
         return this.value;
     };
