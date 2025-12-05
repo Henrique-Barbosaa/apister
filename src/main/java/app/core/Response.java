@@ -17,10 +17,15 @@ public class Response implements Externalizable {
     private /*@ spec_public @*/ StatusCode statusCode;
     private /*@ spec_public @*/ Instant requestedAt;
     private /*@ spec_public @*/ Instant receivedAt;
+
+    //@ public invariant message != null;
+    //@ public invariant header != null;
+
+    //@ public constraint (\old(receivedAt) != null ==> receivedAt != null);
+    //@ public constraint (\old(requestedAt) != null ==> requestedAt != null);
     
     /*@ public normal_behavior
-      @   ensures this.message != null;
-      @   ensures this.header != null;
+      @   assignable \everything;
       @*/
     //@ skipesc
     public Response() {
@@ -29,6 +34,7 @@ public class Response implements Externalizable {
     };
 
     /*@ public normal_behavior
+      @   assignable \everything;
       @   requires requestedAt != null;
       @   requires url != null;
       @   requires message != null;
@@ -39,8 +45,6 @@ public class Response implements Externalizable {
       @   ensures this.statusCode == statusCode;
       @   ensures this.statusCode != null;
       @   ensures this.url != null;
-      @   ensures this.header != null;
-      @   ensures this.message != null;
       @   ensures this.requestedAt != null;
       @   ensures this.receivedAt != null;
       @*/
@@ -61,6 +65,10 @@ public class Response implements Externalizable {
     };
 
     //#region Externalizable
+    /*@ also public exceptional_behavior
+      @   assignable \nothing;
+      @   signals_only IOException;
+      @*/
     //@ skipesc
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
@@ -72,6 +80,14 @@ public class Response implements Externalizable {
         out.writeObject(this.receivedAt);
     };
 
+    /*@ also public normal_behavior
+      @   assignable \everything;
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   signals_only IOException, ClassNotFoundException;
+      @*/
     //@ skipesc
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
@@ -110,6 +126,7 @@ public class Response implements Externalizable {
     };
 
     /*@ public normal_behavior
+      @   assignable this.url;
       @   ensures this.url == url;
       @   requires url != null;
       @*/
@@ -126,6 +143,7 @@ public class Response implements Externalizable {
     };
 
     /*@ public normal_behavior
+      @   assignable this.statusCode;
       @   ensures this.statusCode == statusCode;
       @   requires statusCode != null;
       @*/
@@ -142,6 +160,7 @@ public class Response implements Externalizable {
     };
     
     /*@ public normal_behavior
+      @   assignable this.requestedAt;
       @   ensures this.requestedAt == requestedAt;
       @   requires requestedAt != null;
       @*/
@@ -158,6 +177,7 @@ public class Response implements Externalizable {
     };
 
     /*@ public normal_behavior
+      @   assignable this.receivedAt;
       @   ensures this.receivedAt == receivedAt;
       @   requires receivedAt != null;
       @*/
