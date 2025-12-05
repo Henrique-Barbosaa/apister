@@ -93,7 +93,7 @@ public class Request extends Node {
 
     //#region Externalizable
     /*@ also public exceptional_behavior
-      @   assignable \nothing; // Em caso de erro, não deveria mudar o estado (idealmente)
+      @   assignable \nothing;
       @   signals_only IOException;
       @*/
     //@ skipesc

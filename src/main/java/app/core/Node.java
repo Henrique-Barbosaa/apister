@@ -13,14 +13,25 @@ public class Node extends TreeItem<String> implements Externalizable {
     private /*@ spec_public @*/ String oldValue = "";
     private /*@ spec_public @*/ boolean editing = false;
 
+    //@ public initially editing == false;
+    //@ public initially oldValue != null && oldValue.equals("");
+
     public Node() {};
 
+    /*@ public normal_behavior
+      @   requires name != null;
+      @   assignable \everything;
+      @*/
     //@ skipesc
     public Node(String name) {
         super(name);
     };
 
     //#region Externalizable
+    /*@ also public exceptional_behavior
+      @   assignable \nothing;
+      @   signals_only IOException;
+      @*/
     //@ skipesc
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
@@ -33,6 +44,14 @@ public class Node extends TreeItem<String> implements Externalizable {
         };
     };
 
+    /*@ also public normal_behavior
+      @   assignable \everything;
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   signals_only IOException, ClassNotFoundException;
+      @*/
     //@ skipesc
     @Override
     @SuppressWarnings("unchecked")
@@ -62,12 +81,21 @@ public class Node extends TreeItem<String> implements Externalizable {
         return this.editing;
     };
 
+    /*@ public normal_behavior
+      @   assignable editing; 
+      @   ensures !this.editing;
+      @*/
     //@ skipesc
     public void stopEdit() {
         this.editing = false;
         this.setValue(oldValue);
     };
 
+    /*@ public normal_behavior
+      @   assignable \everything; 
+      @   ensures this.editing;
+      @*/
+    //@ skipesc
     public void startEdit() {
         this.editing = true;
         this.oldValue = this.getValue();
@@ -76,6 +104,7 @@ public class Node extends TreeItem<String> implements Externalizable {
 
     /*@ public normal_behavior
       @   requires name != null;
+      @   assignable \everything;
       @*/
     //@ skipesc
     public Node rename(String name) {
@@ -107,6 +136,7 @@ public class Node extends TreeItem<String> implements Externalizable {
 
     /*@ public normal_behavior
       @   requires node != null;
+      @   assignable \everything;
       @*/
     //@ skipesc
     public void add(Node node) {
@@ -116,6 +146,7 @@ public class Node extends TreeItem<String> implements Externalizable {
 
     /*@ public normal_behavior
       @   requires node != null;
+      @   assignable \everything;
       @*/
     //@ skipesc
     public void remove(Node node) {
@@ -126,6 +157,7 @@ public class Node extends TreeItem<String> implements Externalizable {
     /*@ public normal_behavior
       @   requires from != null;
       @   requires to != null;
+      @   assignable \everything;
       @*/
     //@ skipesc
     public void replace(Node from, Node to) {
